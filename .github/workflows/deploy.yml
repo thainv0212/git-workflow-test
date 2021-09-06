@@ -1,0 +1,12 @@
+name: Deploy Staging
+on: [push]
+jobs:
+  Deploy-Stg:
+    environment: staging
+    runs-on: google/cloud-sdk:alpine
+    steps:
+     - run: echo $SERVICE_ACCOUNT > /tmp/gcloud-key.json
+     - run: gcloud auth activate-service-account --key-file /tmp/gcloud-key.json
+     - run: gcloud config set project microerp-265008
+     - run: cat .env.prod > .env
+     - run: cd cmd/frontapi && gcloud app deploy --quiet app.yaml
